@@ -1,6 +1,8 @@
 import re
 import json
-import asyncio
+from fastapi import Body
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from playwright.async_api import async_playwright, Locator, Page
 from playwright_stealth import Stealth
 
@@ -98,20 +100,20 @@ async def send_msg(msg:str, page:Page):
 
     return answer
 
-
-async def main():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     async with Stealth().use_async(async_playwright()) as p:
-        browser = await p.chromium.launch(headless = False)
+        browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
         await page.goto("https://chatgpt.com/")
+        app.state.page = page  # Store page for reuse in requests
+        yield
+        await browser.close()  # Cleanup on shutdown
 
-        answer = await send_msg('hi mate', page)
-        print(f"GPT Response: {answer}")
-        
-        answer = await send_msg(
-            'write factorial function with python and java and explain it and show me a sample table of input and outputs and explain more',
-            page
-        )
-        print(f"GPT Response: {answer}")
+app = FastAPI(lifespan=lifespan)
 
-asyncio.run(main())
+@app.post("/chat")
+async def chat(prompt: str = Body(..., embed=True)):
+    page = app.state.page
+    answer = await send_msg(prompt, page)
+    return {"response": answer}
