@@ -117,3 +117,10 @@ async def chat(prompt: str = Body(..., embed=True)):
     page = app.state.page
     answer = await send_msg(prompt, page)
     return {"response": answer}
+
+'''
+
+uvicorn chatgpt:app --reload
+curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{"prompt": "hi mate"}'
+
+'''
