@@ -1,28 +1,53 @@
 # Free ChatGPT API (Unofficial)
 
-A simple self-hosted API that lets you chat with ChatGPT for free using Playwright to control a browser.
+A simple self-hosted API that lets you chat with ChatGPT for free using Playwright to control a real browser session.
 
 ## Quick Start
 
-1. Install dependencies:
-   ```bash
-   pip install fastapi uvicorn playwright playwright-stealth
-   python -m playwright install chromium
-   ```
+```bash
+git clone https://github.com/mahdi-marjani/free-llm-api.git
+cd free-llm-api
+```
 
-2. Run the server:
-   ```bash
-   uvicorn chatgpt:app --reload
-   ```
+### 1. Set up a virtual environment (recommended)
 
-3. Send a message:
-   ```bash
-   curl -X POST http://localhost:8000/chat \
-     -H "Content-Type: application/json" \
-     -d '{"prompt": "Hello, how are you?"}'
-   ```
+```bash
+python -m venv venv
 
-   Response example:
-   ```json
-   {"response": "Hi! I'm doing great, thanks for asking..."}
-   ```
+# Activate it
+# On Linux / macOS
+source venv/bin/activate
+
+# On Windows
+venv\Scripts\activate
+```
+
+### 2. Install dependencies
+
+```bash
+pip install fastapi uvicorn playwright playwright-stealth
+
+# Install browser (Chromium)
+playwright install chromium
+```
+
+### 3. Run the server
+
+```bash
+uvicorn chatgpt:app --reload
+```
+
+### 4. Send a message
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Hello, how are you?"}'
+```
+
+Example response:
+```json
+{"response": "Hi! I'm doing great, thanks for asking..."}
+```
+
+Enjoy your free LLM API! 🚀
