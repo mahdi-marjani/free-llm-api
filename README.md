@@ -34,7 +34,7 @@ playwright install chromium
 ### 3. Run the server
 
 ```bash
-uvicorn chatgpt:app --reload
+uvicorn chatgpt:app
 ```
 
 ### 4. Send a message
